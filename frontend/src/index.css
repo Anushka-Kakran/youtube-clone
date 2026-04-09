@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional CSS variables */
+:root {
+  --yt-red: #FF0000;
+  --yt-red-hover: #cc0000;
+  --yt-bg: #FFFFFF;
+  --yt-text: #0F0F0F;
+}

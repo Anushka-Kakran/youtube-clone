@@ -2,10 +2,12 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import fileUpload from "express-fileupload";
+import cors from 'cors';
 
 import userRoute from "./routes/user.js";
 import videoRoute from "./routes/video.js";
 import commentRoute from "./routes/comment.js";
+
 
 dotenv.config();
 
@@ -14,6 +16,9 @@ const app = express();
 // --- Middleware ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//cors
+app.use(cors());
 
 // File Upload Configuration
 app.use(
