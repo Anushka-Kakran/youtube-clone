@@ -1,9 +1,21 @@
-import { app , connectDB} from "./app.js";
+import { app, connectDB } from "./app.js";
 
-const PORT = 3000;
+// Use dynamic port (Render) or fallback to 3000 (local)
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Connect DB first, then start server
+const startServer = async () => {
+  try {
+    await connectDB(); // connect to MongoDB
 
-await connectDB();
+    app.listen(PORT, () => {
+      console.log(`✅ Server is running on port ${PORT}`);
+    });
+
+  } catch (error) {
+    console.error("❌ Database connection failed:", error);
+    process.exit(1); // stop app if DB fails
+  }
+};
+
+startServer();
