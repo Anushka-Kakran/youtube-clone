@@ -6,7 +6,7 @@ const videoSchema = new mongoose.Schema({
    // Basic Video Details
    title: {type: String, required: true},
    description : {type: String, required: true},
-   user_id : {type: String, required: true}, // ID of the uploader
+    user_id : {type: mongoose.Schema.Types.ObjectId, required: true, ref : 'User'},
    
    // Cloudinary Media Data (URLs and Public IDs for management)
    vedioUrl : {type: String, required: true},

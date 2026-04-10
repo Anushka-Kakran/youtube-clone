@@ -2,10 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Optional CSS variables */
-:root {
-  --yt-red: #FF0000;
-  --yt-red-hover: #cc0000;
-  --yt-bg: #FFFFFF;
-  --yt-text: #0F0F0F;
+/* =========================
+   BASE RESET
+========================= */
+html, body, #root {
+  height: 100%;
 }
+
+/* =========================
+   THEME VARIABLES (OPTIONAL)
+========================= */
+/* :root {
+  --yt-red: #FF0000;
+  --yt-bg: #ffffff;
+  --yt-text: #0f0f0f;
+} */
+
+/* =========================
+   LIGHT MODE
+========================= */
+body {
+  background-color: var(--yt-bg);
+  color: var(--yt-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
