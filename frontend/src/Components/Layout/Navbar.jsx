@@ -1,100 +1,159 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = ({ onMenuToggle }) => {
   const navigate = useNavigate();
-  const [dark, setDark] = useState(false);
 
+  const [dark, setDark] = useState(false);
+  const [open, setOpen] = useState(false); // ✅ dropdown state
+
+  const dropdownRef = useRef(null);
+
+  // =========================
+  // 🌙 DARK MODE
+  // =========================
   useEffect(() => {
     if (dark) document.documentElement.classList.add("dark");
     else document.documentElement.classList.remove("dark");
   }, [dark]);
 
+  // =========================
+  // 👇 CLOSE DROPDOWN ON OUTSIDE CLICK
+  // =========================
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // =========================
+  // 👤 USER DATA
+  // =========================
   const email = localStorage.getItem("email") || "";
-  const initial = email.charAt(0).toUpperCase();
+  const name = localStorage.getItem("channelName") || "User";
+  const initial = name.charAt(0).toUpperCase();
+
+  // =========================
+  // 🚪 LOGOUT
+  // =========================
+  const handleLogout = () => {
+    localStorage.clear();
+    setOpen(false);
+    navigate("/login");
+  };
 
   return (
-    <nav className="flex items-center justify-between px-3 sm:px-4 py-2 sticky top-0 z-50 
+    <nav className="flex items-center justify-between px-3 py-2 sticky top-0 z-50 
       bg-white dark:bg-yt-darkBg 
       text-yt-text dark:text-yt-darkText 
       border-b border-yt-border dark:border-yt-darkBorder 
-      font-youtube transition-colors duration-300">
+      font-youtube">
 
       {/* 🔹 LEFT */}
-      <div className="flex items-center gap-3 sm:gap-4">
+      <div className="flex items-center gap-3">
         <button
           onClick={onMenuToggle}
-          className="p-2 rounded-full hover:bg-yt-secondary dark:hover:bg-yt-darkSecondary transition"
+          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-yt-darkSecondary"
         >
-          <i className="fa-solid fa-bars text-lg"></i>
+          <i className="fa-solid fa-bars"></i>
         </button>
 
-        <Link to="/" className="flex items-center gap-1">
-          <i className="fa-brands fa-youtube text-red-600 text-3xl"></i>
-          <span className="text-lg sm:text-xl font-bold tracking-tight hidden xs:block">
-            YouTube
-          </span>
+        <Link to="/dashboard" className="flex items-center gap-2">
+          <i className="fa-brands fa-youtube text-yt-red text-2xl"></i>
+          <span className="font-bold">YouTube</span>
         </Link>
       </div>
 
       {/* 🔍 SEARCH */}
-      <div className="hidden sm:flex flex-1 justify-center mx-4">
-        <div className="flex w-full max-w-[600px] overflow-hidden 
-          border border-yt-border dark:border-yt-darkBorder 
-          rounded-full focus-within:ring-1 focus-within:ring-blue-500">
-
-          <input
-            type="text"
-            placeholder="Search"
-            className="w-full px-4 py-2 text-sm 
-              bg-white dark:bg-yt-darkBg 
-              text-yt-text dark:text-white 
-              outline-none"
-          />
-
-          <button
-            className="px-5 flex items-center justify-center 
-              bg-yt-secondary dark:bg-yt-darkSecondary 
-              border-l border-yt-border dark:border-yt-darkBorder 
-              hover:bg-gray-200 dark:hover:bg-yt-border transition"
-          >
-            <i className="fa-solid fa-magnifying-glass"></i>
-          </button>
-        </div>
+      <div className="hidden sm:flex flex-1 justify-center">
+        <input
+          className="w-[60%] px-3 py-2 border rounded-full"
+          placeholder="Search"
+        />
       </div>
 
       {/* 🔹 RIGHT */}
-      <div className="flex items-center gap-2 sm:gap-4">
+      <div className="flex items-center gap-3">
 
-        {/* 🌙 DARK MODE */}
+        {/* 🌙 DARK */}
         <button
           onClick={() => setDark(!dark)}
-          className="p-2 rounded-full hover:bg-yt-secondary dark:hover:bg-black transition"
+          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-yt-darkSecondary"
         >
           {dark ? "🌞" : "🌙"}
         </button>
 
         {/* 👤 USER */}
         {email ? (
-          <Link
-            to="/account"
-            className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center 
-              text-white font-bold hover:ring-2 hover:ring-blue-400 transition"
-          >
-            {initial}
-          </Link>
+          <div className="relative" ref={dropdownRef}>
+
+            {/* PROFILE BUTTON */}
+            <button
+              onClick={() => setOpen(!open)}
+              className="w-9 h-9 rounded-full bg-yt-red text-white font-bold"
+            >
+              {initial}
+            </button>
+
+            {/* DROPDOWN */}
+            {open && (
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-yt-darkSecondary shadow-lg rounded-lg border border-gray-200 dark:bg-gray-100 overflow-hidden">
+
+                {/* USER INFO */}
+                <div className="px-4 py-2 border-b ">
+                  <p className="font-semibold">{name}</p>
+                  <p className="text-xs ">{email}</p>
+                </div>
+
+                {/* MY ACCOUNT */}
+                <Link
+                  to="/account"
+                  onClick={() => setOpen(false)}
+                  className="block px-4 py-2 hover:bg-gray-100 "
+                >
+                  <i className="fa-solid fa-user mr-2"></i>
+                  My Account
+                </Link>
+
+                {/* DASHBOARD */}
+                <Link
+                  to="/dashboard"
+                  onClick={() => setOpen(false)}
+                  className="block px-4 py-2 hover:bg-gray-100 "
+                >
+                  <i className="fa-solid fa-video mr-2"></i>
+                  Dashboard
+                </Link>
+
+                {/* LOGOUT */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 bg-yt-red hover:bg-gray-100 "
+                >
+                  <i className="fa-solid fa-right-from-bracket mr-2"></i>
+                  Sign out
+                </button>
+
+              </div>
+            )}
+
+          </div>
         ) : (
+          // ❌ NOT LOGGED IN
           <Link
             to="/login"
-            className="flex items-center gap-2 border border-yt-border 
-              dark:border-yt-darkBorder px-3 py-1.5 rounded-full 
-              text-blue-600 dark:text-blue-400 font-medium 
-              hover:bg-blue-50 dark:hover:bg-yt-darkSecondary transition"
+            className="px-3 py-1 border rounded-full text-blue-600"
           >
-            <i className="fa-regular fa-user"></i>
-            <span className="hidden sm:block">Sign in</span>
+            <i className="fa-regular fa-user mr-1"></i>
+            Sign in
           </Link>
         )}
+
       </div>
     </nav>
   );

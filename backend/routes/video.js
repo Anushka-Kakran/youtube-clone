@@ -1,11 +1,15 @@
 import express from 'express';
-import { deleteVedio, dislikeVideo, likeVideo, updateVedio, video, View } from '../controller/video.controller.js';
+import { deleteVedio, dislikeVideo, likeVideo, updateVedio, addVideo, View, getVideo } from '../controller/video.controller.js';
 import checkAuth from '../middleware/checkAuth.js';
 
 const router = express.Router();
 
+//get all video
+
+router.get('/own-video', checkAuth, getVideo)
+
 // Upload a new video and thumbnail (Login required)
-router.post('/upload', checkAuth, video);
+router.post('/upload', checkAuth, addVideo);
 
 // Update video details or thumbnail (Login required)
 router.put('/:videoId', checkAuth, updateVedio);

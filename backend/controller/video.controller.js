@@ -13,11 +13,50 @@ cloudinary.config({
     api_secret : process.env.API_SECRET 
 });
 
+
+/**
+ * GET All VIDEO
+ * Handles auth, dual-file  get(video & thumbnail), and DB storage.
+ */
+
+export const getVideo = async (req, res) => {
+  try {
+    // 🔍 DEBUG: always check header first
+    // console.log("HEADERS:", req.headers.authorization);
+
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+
+    if (!authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Invalid token format" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    // 🔐 VERIFY TOKEN
+    const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+     
+     const videos = await Video.find({user_id: user._id}).populate('user_id', 'channelName logoUrl');
+      
+     return res.status(200).json({
+      videos: videos
+     })
+
+  } catch (error) {
+    console.log("ERROR:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
 /**
  * UPLOAD VIDEO
  * Handles auth, dual-file upload (video & thumbnail), and DB storage.
  */
-export const video = async (req, res) => {
+export const addVideo = async (req, res) => {
   const { title, description, category, tags } = req.body;
 
   try {

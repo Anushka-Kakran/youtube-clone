@@ -3,7 +3,7 @@ import axios from "axios";
 import Navbar from "../Layout/Navbar";
 import Sidebar from "../Layout/Sidebar";
 import FilterBar from "../Video/FilterBar";
-import VideoCard from "../Video/VideoCard";
+import VideoCard from "../Video/MyVideos";
 
 const Dashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
