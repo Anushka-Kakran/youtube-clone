@@ -14,9 +14,26 @@ cloudinary.config({
 });
 
 
+// ADD THIS NEW FUNCTION to your controller
+export const getAllVideos = async (req, res) => {
+  try {
+    // No filter inside find() means it gets every video in the database
+    const videos = await Video.find()
+      .populate('user_id', 'channelName logoUrl')
+      .sort({ createdAt: -1 }); // Optional: shows newest videos first
+
+    return res.status(200).json({
+      videos: videos
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 /**
  * GET All VIDEO
  * Handles auth, dual-file  get(video & thumbnail), and DB storage.
+ * 
  */
 
 export const getVideo = async (req, res) => {

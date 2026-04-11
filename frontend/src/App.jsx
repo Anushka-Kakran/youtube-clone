@@ -11,9 +11,10 @@ import Login from "./Components/auth/Login";
 
 // Page Imports
 import Account from "./pages/Account";
-import Home from "./pages/Home";
+
 import VideoPlayer from "./pages/VideoPlayer";
-import Channel from "./pages/Channel";
+import Dashboard from "./Components/Dashboard";
+
 
 /**
  * Layout Component:
@@ -24,11 +25,11 @@ const Layout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="flex flex-col min-h-screen font-youtube bg-yt-bg dark:bg-yt-darkBg transition-colors">
+    <div className="flex   flex-col min-h-screen font-youtube bg-yt-bg dark:bg-yt-darkBg transition-colors">
       {/* Top Navigation */}
       <Navbar onMenuToggle={() => setSidebarOpen(!isSidebarOpen)} />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1">
         {/* Persistent Sidebar */}
         <Sidebar isOpen={isSidebarOpen} />
 
@@ -62,21 +63,17 @@ function App() {
       element: <Layout />,
       children: [
         {
-          path: "/dashboard",
-          element: <Home />,
-        },
-        {
           path: "/video/:id", // Dynamic route for specific videos
           element: <VideoPlayer />,
-        },
-        {
-          path: "/channel/:userId", // CRUD management page
-          element: <Channel />,
         },
         {
           path: "/account",
           element: <Account />,
         },
+        {
+          path: "/dashboard",
+          element: <Dashboard/>
+        }
       ],
     },
   ]);

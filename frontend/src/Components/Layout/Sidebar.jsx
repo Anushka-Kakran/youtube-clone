@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Sidebar = ({ isOpen }) => {
-
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     { icon: "fa-house", label: "Home", path: "/dashboard" },
@@ -12,23 +12,50 @@ const Sidebar = ({ isOpen }) => {
   ];
 
   return (
-    <aside className={`
-      ${isOpen ? "w-64" : "w-20"} 
-      transition-all duration-300 h-screen sticky left-0 overflow-y-auto 
-      bg-yt-bg dark:bg-yt-darkBg  border-r border-yt-border dark:border-yt-darkBorder 
-      hidden md:block 
-    `}>
-      <div className="p-2">
-        {menuItems.map((item) => (
-          <div
-            key={item.label}
-            onClick={() => navigate(item.path)}   // ✅ navigation here
-            className="flex flex-col lg:flex-row items-center gap-4 p-3 hover:bg-yt-secondary dark:hover:bg-yt-darkSecondary rounded-lg cursor-pointer dark:text-yt-darkText"
-          >
-            <i className={`fa-solid ${item.icon} text-lg`}></i>
-            {isOpen && <span className="text-sm font-medium">{item.label}</span>}
-          </div>
-        ))}
+    <aside
+      className={`
+        ${isOpen ? "w-60" : "w-20"}
+        transition-all duration-300 h-screen sticky left-0
+        overflow-y-auto
+        bg-white dark:bg-[#0f0f0f]
+        border-r border-gray-200 dark:border-zinc-800
+        hidden md:block
+      `}
+    >
+      <div className="py-3 px-2">
+
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path;
+
+          return (
+            <div
+              key={item.label}
+              onClick={() => navigate(item.path)}
+              className={`
+                flex items-center gap-4 cursor-pointer rounded-xl
+                transition-all duration-200
+                hover:bg-gray-100 dark:hover:bg-zinc-800
+                px-3 py-3 mb-1
+
+                ${isActive ? "bg-gray-200 dark:bg-zinc-800" : ""}
+                ${!isOpen ? "justify-center" : ""}
+              `}
+            >
+              <i
+                className={`fa-solid ${item.icon} text-lg
+                  ${isActive ? "text-red-500" : "text-gray-600 dark:text-gray-300"}
+                `}
+              ></i>
+
+              {/* LABEL */}
+              {isOpen && (
+                <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                  {item.label}
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
     </aside>
   );

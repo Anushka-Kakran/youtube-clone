@@ -1,8 +1,11 @@
 import express from 'express';
-import { deleteVedio, dislikeVideo, likeVideo, updateVedio, addVideo, View, getVideo } from '../controller/video.controller.js';
+import { deleteVedio, dislikeVideo, likeVideo, updateVedio, addVideo, View, getVideo, getAllVideos } from '../controller/video.controller.js';
 import checkAuth from '../middleware/checkAuth.js';
 
 const router = express.Router();
+
+// 1. GET ALL VIDEOS (For the Homepage feed)
+router.get('/all-videos', getAllVideos);
 
 //get all video
 
