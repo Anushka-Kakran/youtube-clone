@@ -15,36 +15,36 @@ function Login() {
     try {
       const res = await axios.post(
         "https://youtube-clone-zd16.onrender.com/user/login",
-        { email, password }
+        { email, password },
       );
 
       // Save token and userId in localStorage
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data._id);
       localStorage.setItem("email", email); // Store the email entered in the form
-       localStorage.setItem("channelName", res.data.channelName);
-    localStorage.setItem("logo", res.data.logoUrl);
-    
-    // Store the complete user object
-    const userData = {
-      _id: res.data._id,
-      channelName: res.data.channelName,
-      email: res.data.email,
-      phone: res.data.phone,
-      logoId: res.data.logoId,
-      logoUrl: res.data.logoUrl,
-      subscribers: res.data.subscribers,
-      subscribedChannels: res.data.subcribedChannels
-    };
-    localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("channelName", res.data.channelName);
+      localStorage.setItem("logoUrl", res.data.logoUrl);
 
-    console.log("ChannelName:", localStorage.getItem("channelName"));
-console.log("Email:", localStorage.getItem("email"));
+      // Store the complete user object
+      const userData = {
+        _id: res.data._id,
+        channelName: res.data.channelName,
+        email: res.data.email,
+        phone: res.data.phone,
+        logoId: res.data.logoId,
+        logoUrl: res.data.logoUrl,
+        subscribers: res.data.subscribers,
+        subscribedChannels: res.data.subcribedChannels,
+      };
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      //     console.log("ChannelName:", localStorage.getItem("channelName"));
+      // console.log("Email:", localStorage.getItem("email"));
 
       toast.success("Login successful!");
       // console.log(res.data);
-      
-      navigate("/dashboard"); 
+
+      navigate("/");
 
       return res.data;
     } catch (error) {

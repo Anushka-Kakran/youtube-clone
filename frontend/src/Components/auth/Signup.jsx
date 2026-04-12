@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Signup() {
@@ -35,10 +35,10 @@ function Signup() {
       );
 
       // console.log("Signup success:", res.data);
-      navigate('/login')
-      toast("Account is created...")
+      navigate("/login");
+      toast("Account is created...");
       return res.data;
-    }catch (error) {
+    } catch (error) {
       setLoading(false);
       toast.error(error.response.data.error);
     } finally {
@@ -48,16 +48,18 @@ function Signup() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true); 
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("channelName", channelName);
     formData.append("email", email);
     formData.append("password", password);
     formData.append("phone", phone);
-    if (logo) formData.append("logo", logoUrl);
 
-    await userData(formData); // will setLoading(false) inside userData
+    // ✅ FIXED HERE
+    if (logo) formData.append("logo", logo);
+
+    await userData(formData);
   };
 
   return (
@@ -74,8 +76,6 @@ function Signup() {
 
         {/* Form */}
         <form onSubmit={submitHandler}>
-
-        
           {/* File upload / logo */}
           <div className="flex justify-center mb-6">
             <label className="cursor-pointer">
@@ -93,7 +93,7 @@ function Signup() {
               </div>
             </label>
           </div>
-          
+
           {/* Channel Name */}
           <input
             type="text"
@@ -133,7 +133,6 @@ function Signup() {
             required
             className="w-full border border-yt-border px-4 py-3 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-yt-red"
           />
-
 
           {/* Submit Button */}
           <button
